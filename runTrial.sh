@@ -1,0 +1,5 @@
+python3 -m simple_network_sim.sampleUseOfModel data/compartmentsSCovMod.csv data/OA_population_SCovMod_row.csv data/fiveWF_01_SCovMod_noquotes.csv fiveSCov.pdf data/covidSimpleDeaths.csv
+python3 -m simple_network_sim.sampleUseOfModel data/compartmentsSCovMod.csv data/OA_population_SCovMod_row.csv data/tenthWF_01_SCovMod_noquotes.csv tenthSCov.pdf data/covidSimpleDeaths.csv
+python3 -m simple_network_sim.sampleUseOfModel data/compartmentsSCovMod.csv data/OA_population_SCovMod_row.csv data/quarterWF_01_SCovMod_noquotes.csv quarterSCov.pdf data/covidSimpleDeaths.csv
+python3 -m simple_network_sim.sampleUseOfModel data/compartmentsSCovMod.csv data/OA_population_SCovMod_row.csv data/halfWF_01_SCovMod_noquotes.csv halfSCov.pdf data/covidSimpleDeaths.csv
+python3 -m simple_network_sim.sampleUseOfModel data/compartmentsSCovMod.csv data/OA_population_SCovMod_row.csv data/WF_01_SCovMod_noquotes.csv afilenameSCov.pdf data/covidSimpleDeaths.csv

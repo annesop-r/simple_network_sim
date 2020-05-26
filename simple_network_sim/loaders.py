@@ -21,7 +21,7 @@ def _checkAgeParameters(agesDictionary):
             assert all_compartments == list(compartments.keys()), f"compartments mismatch in {age}"
         for compartment, transitions in compartments.items():
             assert compartment in transitions.keys(), f"{age},{compartment} does not have self referencing key"
-            assert sum(transitions.values()) == 1.0, f"{age},{compartment} transitions do not add up to 1.0"
+            assert round(sum(transitions.values()), 2) == 1.0, f"{age},{compartment} transitions do not add up to 1.0"
             for new_name, prob in transitions.items():
                 assert 0.0 <= prob <= 1.0, f"{age},{compartment},{new_name},{prob} not a valid probability"
 

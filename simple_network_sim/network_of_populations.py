@@ -29,6 +29,14 @@ def countInfectionsAgeStructured(dictOfStates, time):
                 total = total + dictOfStates[time][node][(age, state)]
     return total
 
+def countDeathsAgeStructured(dictOfStates, time):
+    total = 0
+    for node in dictOfStates[time]:
+        for (age, state) in dictOfStates[time][node]:
+            if state == 'D':
+                total = total + dictOfStates[time][node][(age, state)]
+    return total
+
 
 # NotCurrentlyInUse
 # this takes a dictionary of states at times at nodes, and returns a string
@@ -74,6 +82,7 @@ def basicSimulationInternalAgeStructure(network, timeHorizon):
     timeSeriesInfection = []
 
     for time in range(timeHorizon):
+        # print("working at time " + str(time))
         # make sure the next time exists, so that we can add exposed individuals to it
         nextTime = time + 1
         if nextTime not in network.states:
@@ -81,14 +90,14 @@ def basicSimulationInternalAgeStructure(network, timeHorizon):
             for region in network.states[nextTime].values():
                 for state in region.keys():
                     region[state] = 0.0
-
+        # print("doing internal progression")
         doInternalProgressionAllNodes(network.states, time, network.progression)
-
+        # print("doing internal infection") 
         doInteralInfectionProcessAllNodes(network.states, network.infectionMatrix, time)
-
+        # print("doing between infection")
         doBetweenInfectionAgeStructured(network.graph, network.states, time)
-
-        timeSeriesInfection.append(countInfectionsAgeStructured(network.states, time))
+        # print("doing wrap-up accounting")
+        timeSeriesInfection.append(countDeathsAgeStructured(network.states, time))
 
     return timeSeriesInfection
 
@@ -197,6 +206,8 @@ def doBetweenInfectionAgeStructured(graph, dictOfStates, currentTime):
         totalDelta = totalIncomingInfectionsByNode[vertex]
         deltaByAge = distributeInfections(dictOfStates[currentTime][vertex], totalDelta)
         for age in deltaByAge:
+           if dictOfStates[currentTime+1][vertex][(age, 'S')] < deltaByAge[age]:
+              deltaByAge[age] = dictOfStates[currentTime+1][vertex][(age, 'S')]
            assert dictOfStates[currentTime+1][vertex][(age, 'S')] >= deltaByAge[age], "number of infected cannot be greater than susceptible"
            dictOfStates[currentTime+1][vertex][(age, 'S')] = dictOfStates[currentTime+1][vertex][(age, 'S')] - deltaByAge[age]
            dictOfStates[currentTime+1][vertex][(age, 'E')] = dictOfStates[currentTime+1][vertex][(age, 'E')] + deltaByAge[age]
@@ -243,6 +254,10 @@ def doInteralInfectionProcessAllNodes(dictOfStates, ageMixingInfectionMatrix, ti
     for node in dictOfStates[time]:
             newInfected = doInternalInfectionProcess(dictOfStates[time][node], ageMixingInfectionMatrix)
             for age in newInfected:
+#                 Amended for SCovMod alignment - discussion on Tuesday AM
+                if newInfected[age] > dictOfStates[nextTime][node][(age, 'S')]:
+                    newInfected[age] = dictOfStates[nextTime][node][(age, 'S')]
+                
                 assert newInfected[age] <= dictOfStates[nextTime][node][(age, 'S')], f"More infected people than susceptible ({age}, {time}, {dictOfStates[nextTime][node][(age, 'S')]}, {newInfected[age]})"
                 dictOfStates[nextTime][node][(age, 'E')] = dictOfStates[nextTime][node][(age, 'E')] + newInfected[age]
                 dictOfStates[nextTime][node][(age, 'S')] = dictOfStates[nextTime][node][(age, 'S')] - newInfected[age]
@@ -283,7 +298,7 @@ def doInternalProgressionAllNodes(dictOfNodeInternalStates, currentTime, disease
 
 NetworkOfPopulation = namedtuple("NetworkOfPopulation", ["progression", "states", "graph", "infectionMatrix"])
 
-def createNetworkOfPopulation(disasesProgressionFn, populationFn, graphFn):
+def createNetworkOfPopulation(disasesProgressionFn, populationFn, graphFn, matrixSize):
     with open(disasesProgressionFn) as fp:
         progression = loaders.readCompartmentRatesByAge(fp)
     with open(populationFn) as fp:
@@ -294,7 +309,7 @@ def createNetworkOfPopulation(disasesProgressionFn, populationFn, graphFn):
     infectionMatrix = {}
     for ageA in progression.keys():
         for ageB in progression.keys():
-            infectionMatrix.setdefault(ageA, {})[ageB] = 0.2
+            infectionMatrix.setdefault(ageA, {})[ageB] = matrixSize
 
     state0 = {}
     for node in list(graph.nodes()):
