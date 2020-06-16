@@ -12,3 +12,13 @@ dependencies:
   - coverage=5.0
   - pytest=5.4.1
   - pytest-cov=2.8.1
+
+  # data pipeline api dependencies
+  - toml=0.9.4
+  - h5py=2.9.0
+  - scipy=1.4.1
+
+  # SCRC dependencies
+  - pip #adding a specific pip version dependency (9.0.3) causes conda to error
+  - pip:
+    - git+https://github.com/ScottishCovidResponse/data_pipeline_api.git@9eafa612a76eeb626725779b98d2117fba4f0c1e
