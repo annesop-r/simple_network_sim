@@ -1,0 +1,1 @@
+python -m data_pipeline_api.registry.access_upload --config access.yaml --remote-uri file:///Users/chris.hughes/Documents/external_projects/RAMP/repos/simple_network_sim/data_pipeline_flow/upload_directory --token 438e5798a336f4ebb68ef113060fe34e50df4577

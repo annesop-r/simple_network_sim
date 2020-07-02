@@ -1,0 +1,48 @@
+data_directory: ./data_directory
+access_log: access.yaml
+fail_on_hash_mismatch: true
+responsible_person: mrow84
+model_version: 1.0.0
+model_name: simple_network_sim
+
+read:
+ - where:
+     data_product: human/compartment-transition
+   use:
+     data_product: input/human/compartment-transition
+     version: 0.1.0
+ - where:
+     data_product: human/population
+   use:
+     data_product: input/human/population
+     version: 0.1.0
+ - where:
+     data_product: human/commutes
+   use:
+     data_product: input/human/commutes
+     version: 0.1.0
+ - where:
+     data_product: human/mixing-matrix
+   use:
+     data_product: input/human/mixing-matrix
+     version: 0.1.0
+ - where:
+     data_product: human/infectious-compartments
+   use:
+     data_product: input/human/infectious-compartments
+     version: 0.1.0
+ - where:
+     data_product: human/infection-probability
+   use:
+     data_product: input/human/infection-probability
+     version: 0.1.0
+ - where:
+     data_product: human/movement-multipliers
+   use:
+     data_product: input/human/movement-multipliers
+     version: 0.1.0
+ - where:
+     data_product: human/initial-infections
+   use:
+     data_product: input/human/initial-infections
+     version: 0.1.0

@@ -1,0 +1,1 @@
+python -m data_pipeline_api.registry.download --config config.yaml --token 438e5798a336f4ebb68ef113060fe34e50df4577
