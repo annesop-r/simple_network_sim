@@ -32,7 +32,7 @@ import healthBoardData as ds
 
 
 # First get the data file
-#if the following file doesn't exist get it, it contains the school data
+#if the following files do not exist get them, they contains the population data
 mal_data_file = Path("./downloads/2016-sape-det-tab-mal.xlsx")
 fem_data_file = Path("./downloads/2016-sape-det-tab-fem.xlsx")
 try:
@@ -46,13 +46,18 @@ except FileNotFoundError:
     urlretrieve(url, fem_data_file)
 
 
-# The age ranges defined in simple_network_sim as keys and a list of the ages that appear as keys in the data.
+# The age ranges defined in simple_network_sim as keys and a list of the ages (column names int he form AGEX
+# in the spreadsheet) as values
+# NOTE: To change the returned age just edit these lines, 
 age_ranges = {
 "[0,17)" : ["AGE" + str(x) for x in range(0,17)],
 "[17,70)" : ["AGE" + str(x) for x in range(17, 70)],
 "70+" :  ["AGE" + str(x) for x in range(70, 120)]
 }
 
+# Read the excel spreadsheet and transform the data by
+# removing the first n lines and the last 2 (a blank line followed by the copyright symbol)
+# adding column names to the dataframe (Area, Council Area, All Ages, AGE0, AGE1, etc)
 
 fem_data = pd.read_excel(fem_data_file, header=3) 
 mal_data = pd.read_excel(mal_data_file, header=3) 
@@ -69,7 +74,7 @@ mal_data.columns  = new_columns
 # do a little cleaning up, remove the first and last two rows
 fem_data.drop(fem_data.head(2).index, inplace=True)
 fem_data.drop(fem_data.tail(2).index, inplace=True)
-mal_data.drop(mal_data.head(6).index, inplace=True)
+mal_data.drop(mal_data.head(2).index, inplace=True)
 mal_data.drop(mal_data.tail(2).index, inplace=True)
 
 
