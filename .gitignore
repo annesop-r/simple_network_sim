@@ -20,6 +20,8 @@ access*yaml
 !sample_input_files/human/**
 !sample_output_files/*
 !tests/test_data/data_pipeline_inputs/human/**
+# Ignore the downloaded files from NRS used to create imputs
+sample_input_files/scripts/downloads/**
 
 # Do ignore output files
 tests/test_data/data_pipeline_inputs/output/**
