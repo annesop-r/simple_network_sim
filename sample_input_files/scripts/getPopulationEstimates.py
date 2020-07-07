@@ -17,6 +17,7 @@ S08000015,Male,70+,25753
 from pathlib import Path
 from urllib.request import urlretrieve
 import openpyxl
+import os
 import pandas as pd
 import numpy as np
 
@@ -32,13 +33,18 @@ import healthBoardData as ds
 
 
 # First get the data file
-#if the following files do not exist get them, they contains the population data
+#if the following files do not exist get them, they contain the population data
 mal_data_file = Path("./downloads/2016-sape-det-tab-mal.xlsx")
 fem_data_file = Path("./downloads/2016-sape-det-tab-fem.xlsx")
 try:
     mal_data_file.resolve(strict=True)
     fem_data_file.resolve(strict=True)
 except FileNotFoundError:
+    # just make sure the ./downloads folder exists.
+    if not os.path.isdir("./downloads"):
+        os.makedirs("./downloads")
+    print("Created folder : ./downloads")
+
     print("Retrieving data from https://www.nrscotland.gov.uk/files//statistics/population-estimates/sape16/")
     url = 'https://www.nrscotland.gov.uk/files//statistics/population-estimates/sape16/2016-sape-det-tab-mal.xlsx'
     urlretrieve(url, mal_data_file)
